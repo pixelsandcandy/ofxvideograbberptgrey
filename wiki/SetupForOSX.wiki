@@ -1,6 +1,8 @@
 #summary One-sentence summary of this page.
 
-= Howto setup an Example prohect in OSX =
+= Howto setup an Example project in OSX =
+
+These step-by-step instructions are based on OpenFrameworks 0.06. Starting from a working example project might be the easiest. As a fallback here are the steps to make any oF project a ofxVideoGrabberPtgrey project.
 
   * take a OpenFrameworks Example and modify it
   * add the ofxVideoGrabberPtgrey folder to the addon section in xcode
@@ -9,4 +11,8 @@
     * remove any files relating to other OSes
       * FlyCapture folder, ofxVideoGrabberFlyCapture.h/cpp
       * linux and win32 folders
-  * 
+  * add header search path (for all configurations)
+    * ../../../addons/ofxVideoGrabberPtgrey/libs/dc1394/include
+  * add existing framework
+    * IOKit.framework
+  * Change "Base SDK" to 10.5
