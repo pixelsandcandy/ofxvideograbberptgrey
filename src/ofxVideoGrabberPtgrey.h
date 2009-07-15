@@ -4,7 +4,7 @@
 
 #if defined( TARGET_OSX ) || defined( TARGET_LINUX )
 #include "ofxVideoGrabberDc1394.h"
-#elif defined( TARGET_WINDOWS )
+#elif defined( TARGET_WIN32 )
 #include "ofxVideoGrabberFlyCapture.h"
 #endif
 
