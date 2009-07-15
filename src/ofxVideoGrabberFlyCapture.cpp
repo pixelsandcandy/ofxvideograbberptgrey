@@ -67,7 +67,6 @@ void ofxVideoGrabberPtgrey::setDeviceID(int _deviceID){
 //---------------------------------------------------------------------------
 unsigned char * ofxVideoGrabberPtgrey::getPixels(){
 	return pixels;
-	//return frame->image;
 }
 
 //------------------------------------
