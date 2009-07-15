@@ -16,3 +16,4 @@ These step-by-step instructions are based on OpenFrameworks 0.06. Starting from 
   * add existing framework
     * IOKit.framework
   * Change "Base SDK" to 10.5
+  * Change Architectures to "Native Arch of Build Machine" effectively setting it to i386
