@@ -1,0 +1,12 @@
+#summary One-sentence summary of this page.
+
+= Howto setup an Example prohect in OSX =
+
+  * take a OpenFrameworks Example and modify it
+  * add the ofxVideoGrabberPtgrey folder to the addon section in xcode
+    * make sure you add the files "relative to the project"
+    * and select the "recursively reate groups for folders" radio button
+    * remove any files relating to other OSes
+      * FlyCapture folder, ofxVideoGrabberFlyCapture.h/cpp
+      * linux and win32 folders
+  * 
