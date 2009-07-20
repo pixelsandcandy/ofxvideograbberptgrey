@@ -26,7 +26,7 @@ class ofxVideoGrabberPtgrey : public ofBaseVideo {
 		void			close();
 		bool			initGrabber(int w, int h, bool bTexture=true);
 		void			videoSettings();
-		unsigned char 	* getPixels();
+		unsigned char*  getPixels();
 		ofTexture &		getTextureReference();
 		void 			setVerbose(bool bTalkToMe);
 		void			setDeviceID(int _deviceID);
@@ -35,11 +35,9 @@ class ofxVideoGrabberPtgrey : public ofBaseVideo {
 		void 			draw(float x, float y);
 		void			update();
 
-		//the anchor is the point the image is drawn around. 
-		//this can be useful if you want to rotate an image around a particular point. 
-        void			setAnchorPercent(float xPct, float yPct);	//set the anchor as a percentage of the image width/height ( 0.0-1.0 range )
-        void			setAnchorPoint(int x, int y);				//set the anchor point in pixels
-        void			resetAnchor();								//resets the anchor to (0, 0)
+        void			setAnchorPercent(float xPct, float yPct);
+        void			setAnchorPoint(int x, int y);
+        void			resetAnchor();
 
 		float 			getHeight();
 		float 			getWidth();
@@ -74,6 +72,8 @@ class ofxVideoGrabberPtgrey : public ofBaseVideo {
 		dc1394video_modes_t   video_modes;
 		dc1394framerate_t     framerate;
 		dc1394video_mode_t    video_mode;
+		dc1394color_coding_t  color_coding;
+		int                   packet_size;
 		dc1394video_frame_t*  frame;
 		dc1394_t*             driver;
 		dc1394camera_list_t*  deviceList;
