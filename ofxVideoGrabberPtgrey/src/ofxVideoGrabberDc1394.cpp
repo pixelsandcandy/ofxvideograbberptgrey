@@ -176,8 +176,10 @@ bool ofxVideoGrabberPtgrey::initGrabber(int w, int h, bool setUseTexture){
             printf("initGrabber warning: Device ID for unit %x not found, using first device\n", deviceID);
             deviceID = deviceList->ids[0].guid;
         }
-    } else {
+    } else if(deviceList->num > 0) {
         deviceID = deviceList->ids[0].guid;
+    } else {
+        ofLog(OF_LOG_ERROR, "in initGrabber, No cameras found");
     }
 	
     	
