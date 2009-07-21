@@ -16,7 +16,7 @@ ofxVideoGrabberPtgrey::ofxVideoGrabberPtgrey(){
 	height 					= 240;	// default setting
 	pixels					= NULL;
 
-	k_fmt7Mode = MODE_0;
+	k_fmt7Mode = MODE_1;  // 2x2 pixel binning
     k_fmt7PixFmt = PIXEL_FORMAT_MONO8;
 	
 
@@ -97,11 +97,13 @@ void ofxVideoGrabberPtgrey::grabFrame(){
         PrintError( err );
         return;
     }
+    
+    bIsFrameNew = true;
 
 	// copy into pixels
 	for( int i = 0; i < height; i++ ) {
 		memcpy( pixels + (i*width), rawImage.GetData() + (i*rawImage.GetStride()), width );
-	}		
+	}      
 
 	if (bUseTexture) {
 		tex.loadData(rawImage.GetData(), width, height, GL_LUMINANCE);
