@@ -24,17 +24,6 @@ ofxVideoGrabberPtgrey::ofxVideoGrabberPtgrey(){
 	color_coding            = DC1394_COLOR_CODING_MONO8;
 	framerate				= DC1394_FRAMERATE_60;
 
-	// In format_7 the framerate is set by setting the packet_size
-	// this is used in dc1394_format7_set_roi()
-	// The following formula is from the libdc1394 faq
-	// http://damien.douxchamps.net/ieee1394/libdc1394/v2.x/faq/#How_can_I_work_out_the_packet_size_for_a_wanted_frame_rate
-	float bus_period = 0.000125;  // for firewire 400
-	int frame_rate = 60;
-	int depth = 1;
-	int num_packets = (int)(1.0/(bus_period*frame_rate) + 0.5);
-	//packet_size =  (width*height*depth + (num_packets*8) - 1)/(num_packets*8);
-	packet_size = DC1394_USE_MAX_AVAIL;
-
     driver = dc1394_new();
     if (!driver) { return; }
     err = dc1394_camera_enumerate(driver, &deviceList);
@@ -174,6 +163,17 @@ bool ofxVideoGrabberPtgrey::initGrabber(int w, int h, bool setUseTexture){
     width = w;
     height = h;
     bUseTexture = setUseTexture;
+	
+	// In format_7 the framerate is set by setting the packet_size
+	// this is used in dc1394_format7_set_roi()
+	// The following formula is from the libdc1394 faq
+	// http://damien.douxchamps.net/ieee1394/libdc1394/v2.x/faq/#How_can_I_work_out_the_packet_size_for_a_wanted_frame_rate
+	float bus_period = 0.000125;  // for firewire 400
+	int frame_rate = 60;
+	int depth = 1;
+	int num_packets = (int)(1.0/(bus_period*frame_rate) + 0.5);
+	//packet_size =  (width*height*depth + (num_packets*8) - 1)/(num_packets*8);
+	packet_size = DC1394_USE_MAX_AVAIL;	
 
     //first choose a device to use
     if( bChooseDevice ) {
@@ -206,21 +206,27 @@ bool ofxVideoGrabberPtgrey::initGrabber(int w, int h, bool setUseTexture){
      *-----------------------------------------------------------------------*/
 
     err = dc1394_video_set_iso_speed(camera, DC1394_ISO_SPEED_400);
-    //DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not set iso speed");
-
-	//err = dc1394_format7_set_color_coding(camera, video_mode, color_coding);
-	//DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not set color coding");
+    if( err != DC1394_SUCCESS ) { ofLog(OF_LOG_ERROR, "failed to set iso speed"); }
+	
+	err = dc1394_video_set_mode( camera, video_mode );
+	if( err != DC1394_SUCCESS ) { ofLog(OF_LOG_ERROR, "failed to set format 7 video mode"); }
+	
+	err = dc1394_format7_set_color_coding(camera, video_mode, color_coding);
+	if( err != DC1394_SUCCESS ) { ofLog(OF_LOG_ERROR, "failed to set format 7 color coding"); }
+	
+	err = dc1394_format7_set_packet_size(camera, video_mode, packet_size);
+	if( err != DC1394_SUCCESS ) { ofLog(OF_LOG_ERROR, "failed to set format 7 packet_size"); }
+	
 	err = dc1394_format7_set_roi(camera, video_mode, color_coding, packet_size, 0,0, width,height);
-	//DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not set format7");
+	if( err != DC1394_SUCCESS ) {
+		ofLog(OF_LOG_ERROR, "failed to set format 7");
+	}
 
-	//err = dc1394_video_set_mode(camera, video_mode);
-	//DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not set video mode");
-
-    err = dc1394_video_set_framerate(camera, framerate);
+    //err = dc1394_video_set_framerate(camera, framerate);
 	//DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not set framerate");
 
     err = dc1394_capture_setup(camera,2, DC1394_CAPTURE_FLAGS_DEFAULT);
-    //DC1394_ERR_CLN_RTN(err,cleanup_and_exit(camera),"Could not setup camera-\nmake sure that the video mode and framerate are\nsupported by your camera");
+	if( err != DC1394_SUCCESS ) { ofLog(OF_LOG_ERROR, "failed to setup dma capturing"); }
 
 
 	/*-----------------------------------------------------------------------
